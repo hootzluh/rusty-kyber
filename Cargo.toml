@@ -1,0 +1,47 @@
+[package]
+name = "rusty-kyber"
+version = "0.1.0"
+authors = ["Justin Hutzler <justin@synergy-network.io>"]
+edition = "2021"
+license = "MIT OR Apache-2.0"
+description = "Pure Rust, no_std, production-ready implementation of Kyber (ML-KEM, FIPS 203) for post-quantum secure key encapsulation."
+repository = "https://github.com/hootzluh/rusty-kyber"
+keywords = ["post-quantum", "kyber", "pqcrypto", "kem", "cryptography", "rust"]
+categories = ["cryptography", "algorithms", "no-std"]
+
+[lib]
+# Use crate-type = ["cdylib", "rlib"] for FFI/WASM/embedded support if needed
+crate-type = ["lib"]
+
+[features]
+# Enable std by default, but allow no_std builds
+default = ["std"]
+std = []
+# Security level feature flags (optional)
+kyber512 = []
+kyber768 = []
+kyber1024 = []
+
+[dependencies]
+rand_core = { version = "0.6", default-features = false }   # For cryptographically secure RNG, no_std compatible
+zeroize = { version = "1.6", features = ["derive"], default-features = false } # Securely zero memory for secrets
+serde = { version = "1.0", features = ["derive"], optional = true, default-features = false } # Optional, for serialization
+
+[dev-dependencies]
+# For KAT and property testing
+hex = "0.4"              # For decoding/encoding hex KATs
+serde_json = "1.0"       # For test vector processing
+proptest = "1.4"         # Fuzzing/property-based testing
+
+[badges]
+maintenance = { status = "actively-developed" }
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"
+opt-level = 3
+
+[package.metadata.docs.rs]
+# Build docs with std and serde enabled
+features = ["std", "serde"]
