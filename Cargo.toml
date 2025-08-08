@@ -10,28 +10,29 @@ keywords = ["post-quantum", "kyber", "pqcrypto", "kem", "cryptography", "rust"]
 categories = ["cryptography", "algorithms", "no-std"]
 
 [lib]
-# Use crate-type = ["cdylib", "rlib"] for FFI/WASM/embedded support if needed
 crate-type = ["lib"]
 
 [features]
-# Enable std by default, but allow no_std builds
-default = ["std"]
+default = ["std", "kyber512"]
 std = []
-# Security level feature flags (optional)
 kyber512 = []
 kyber768 = []
 kyber1024 = []
+serde = ["dep:serde"]
 
 [dependencies]
-rand_core = { version = "0.6", default-features = false }   # For cryptographically secure RNG, no_std compatible
-zeroize = { version = "1.6", features = ["derive"], default-features = false } # Securely zero memory for secrets
-serde = { version = "1.0", features = ["derive"], optional = true, default-features = false } # Optional, for serialization
+rand_core = { version = "0.6", default-features = false }
+zeroize = { version = "1.6", features = ["derive"], default-features = false }
+serde = { version = "1.0", features = ["derive"], optional = true, default-features = false }
+sha3 = { version = "0.10.8", default-features = false }
+paste = "1.0"
 
 [dev-dependencies]
-# For KAT and property testing
-hex = "0.4"              # For decoding/encoding hex KATs
-serde_json = "1.0"       # For test vector processing
-proptest = "1.4"         # Fuzzing/property-based testing
+hex = "0.4"
+serde_json = "1.0"
+proptest = "1.4"
+rand = "0.8"
+rand_chacha = "0.3"
 
 [badges]
 maintenance = { status = "actively-developed" }
@@ -43,5 +44,4 @@ panic = "abort"
 opt-level = 3
 
 [package.metadata.docs.rs]
-# Build docs with std and serde enabled
 features = ["std", "serde"]
